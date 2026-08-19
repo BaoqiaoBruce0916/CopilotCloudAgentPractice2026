@@ -1,3 +1,7 @@
+/**
+ * Data-access helpers for retrieving game records from the database.
+ * Queries are performed at build time via Drizzle ORM and return typed Game objects.
+ */
 import { eq, asc } from 'drizzle-orm';
 import type { Database } from './db';
 import { games, categories, publishers } from '../../db/schema';
@@ -25,6 +29,7 @@ type GameSelectionRow = {
     publisherName: string | null;
 };
 
+/** Maps a raw database query row to a typed {@link Game} object. */
 function mapGame(row: GameSelectionRow): Game {
     return {
         id: row.id,
@@ -42,6 +47,7 @@ function mapGame(row: GameSelectionRow): Game {
     };
 }
 
+/** Builds the shared base query that selects all game fields with joined category and publisher. */
 function baseGamesQuery(db: Database) {
     return db
         .select(gameSelection)
