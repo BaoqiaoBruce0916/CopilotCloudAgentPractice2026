@@ -95,14 +95,17 @@ export function parseGamesCsv(content: string): GameCsvRow[] {
         }));
 }
 
+/** Returns a crowdfunding-flavoured description for a game category. */
 export function categoryDescription(name: string): string {
     return `Collection of ${name} games available for crowdfunding`;
 }
 
+/** Returns a crowdfunding-flavoured description for a publisher. */
 export function publisherDescription(name: string): string {
     return `${name} is a game publisher seeking funding for exciting new titles`;
 }
 
+/** Appends the crowdfunding call-to-action blurb to a raw game description. */
 export function gameDescription(rawDescription: string): string {
     return rawDescription + CROWDFUNDING_BLURB;
 }
