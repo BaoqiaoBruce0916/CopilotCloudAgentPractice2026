@@ -2,9 +2,9 @@ import { test, expect } from '@playwright/test';
 
 test.describe('High Contrast Mode', () => {
   test.beforeEach(async ({ page }) => {
-    // Clear localStorage before each test to start fresh
+    // Clear display-mode from localStorage before each test to start in dark (default)
     await page.goto('/');
-    await page.evaluate(() => localStorage.removeItem('high-contrast'));
+    await page.evaluate(() => localStorage.removeItem('display-mode'));
     await page.reload();
     await page.waitForSelector('[data-testid="games-grid"]', { timeout: 10000 });
   });
@@ -30,17 +30,20 @@ test.describe('High Contrast Mode', () => {
     await expect(toggle).toHaveAttribute('aria-pressed', 'true');
   });
 
-  test('should disable high contrast mode when toggled again', async ({ page }) => {
-    const toggle = page.getByTestId('high-contrast-toggle');
+  test('should switch back to dark mode when Dark button is clicked', async ({ page }) => {
+    const hcToggle = page.getByTestId('high-contrast-toggle');
+    const darkBtn = page.getByTestId('mode-dark');
 
     // Enable high contrast
-    await toggle.click();
+    await hcToggle.click();
     await expect(page.locator('html')).toHaveClass(/high-contrast/);
 
-    // Disable high contrast
-    await toggle.click();
+    // Switch to dark
+    await darkBtn.click();
     await expect(page.locator('html')).not.toHaveClass(/high-contrast/);
-    await expect(toggle).toHaveAttribute('aria-pressed', 'false');
+    await expect(page.locator('html')).toHaveClass(/dark/);
+    await expect(hcToggle).toHaveAttribute('aria-pressed', 'false');
+    await expect(darkBtn).toHaveAttribute('aria-pressed', 'true');
   });
 
   test('should persist high contrast preference in localStorage', async ({ page }) => {
@@ -49,9 +52,9 @@ test.describe('High Contrast Mode', () => {
     // Enable high contrast
     await toggle.click();
 
-    // Check localStorage
-    const stored = await page.evaluate(() => localStorage.getItem('high-contrast'));
-    expect(stored).toBe('true');
+    // Check localStorage key
+    const stored = await page.evaluate(() => localStorage.getItem('display-mode'));
+    expect(stored).toBe('high-contrast');
   });
 
   test('should restore high contrast mode from localStorage on reload', async ({ page }) => {

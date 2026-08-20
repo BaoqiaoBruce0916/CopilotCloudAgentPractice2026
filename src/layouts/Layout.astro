@@ -17,12 +17,19 @@ const { title = "Tailspin Toys" } = Astro.props;
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <meta name="generator" content={Astro.generator} />
         <title>{title}</title>
-        <!-- Apply stored high contrast preference before first paint to avoid flash -->
+        <!-- Apply stored display mode preference before first paint to avoid flash -->
         <script is:inline>
           (function() {
-            if (localStorage.getItem('high-contrast') === 'true') {
-              document.documentElement.classList.add('high-contrast');
+            const mode = localStorage.getItem('display-mode') || 'dark';
+            const html = document.documentElement;
+            // Always start with dark class (default), then adjust
+            if (mode === 'light') {
+              html.classList.remove('dark');
+              html.classList.add('light');
+            } else if (mode === 'high-contrast') {
+              html.classList.add('high-contrast');
             }
+            // 'dark' is already the default from the static class
           })();
         </script>
         <!-- Preconnect to improve font loading -->

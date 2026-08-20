@@ -18,9 +18,27 @@ import Menu from '../assets/icons/menu.svg';
       </div>
       <div class="text-xl font-bold"><a href="/" class="hover:underline">Tailspin Toys</a></div>
     </div>
-    <div>
+    <div role="group" aria-label="Display mode" class="flex items-center gap-1">
       <button
-        id="high-contrast-toggle"
+        id="mode-dark"
+        type="button"
+        class="px-3 py-1 rounded text-sm font-medium bg-white/20 hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-500 transition-colors duration-200"
+        aria-pressed="true"
+        data-testid="mode-dark"
+      >
+        Dark
+      </button>
+      <button
+        id="mode-light"
+        type="button"
+        class="px-3 py-1 rounded text-sm font-medium bg-white/20 hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-500 transition-colors duration-200"
+        aria-pressed="false"
+        data-testid="mode-light"
+      >
+        Light
+      </button>
+      <button
+        id="mode-high-contrast"
         type="button"
         class="px-3 py-1 rounded text-sm font-medium bg-white/20 hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-500 transition-colors duration-200"
         aria-pressed="false"
@@ -62,38 +80,47 @@ import Menu from '../assets/icons/menu.svg';
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && !menu.classList.contains('hidden')) {
         menu.classList.add('hidden');
+        menuToggle.setAttribute('aria-enabled', 'false');
         menuToggle.setAttribute('aria-expanded', 'false');
         menuToggle.focus();
       }
     });
   }
 
-  // High contrast mode: apply stored preference on load
-  const HC_KEY = 'high-contrast';
+  // ── Display mode switcher ──────────────────────────────────────────────────
+  type DisplayMode = 'dark' | 'light' | 'high-contrast';
+
   const htmlEl = document.documentElement;
-  const hcToggle = document.getElementById('high-contrast-toggle');
+  const btnDark = document.getElementById('mode-dark');
+  const btnLight = document.getElementById('mode-light');
+  const btnHC = document.getElementById('mode-high-contrast');
 
-  function applyHighContrast(enabled: boolean) {
-    if (enabled) {
-      htmlEl.classList.add(HC_KEY);
+  function applyMode(mode: DisplayMode) {
+    // Reset all mode classes
+    htmlEl.classList.remove('dark', 'light', 'high-contrast');
+
+    if (mode === 'dark') {
+      htmlEl.classList.add('dark');
+    } else if (mode === 'light') {
+      htmlEl.classList.add('light');
     } else {
-      htmlEl.classList.remove(HC_KEY);
+      htmlEl.classList.add('dark', 'high-contrast');
     }
-    if (hcToggle) {
-      hcToggle.setAttribute('aria-pressed', String(enabled));
-    }
+
+    // Sync aria-pressed on all three buttons
+    if (btnDark) btnDark.setAttribute('aria-pressed', String(mode === 'dark'));
+    if (btnLight) btnLight.setAttribute('aria-pressed', String(mode === 'light'));
+    if (btnHC) btnHC.setAttribute('aria-pressed', String(mode === 'high-contrast'));
+
+    localStorage.setItem('display-mode', mode);
   }
 
-  // Read stored preference
-  const stored = localStorage.getItem(HC_KEY);
-  applyHighContrast(stored === 'true');
+  // Restore stored preference (the inline head script already set classes,
+  // but we still need to sync aria-pressed on the buttons).
+  const stored = (localStorage.getItem('display-mode') ?? 'dark') as DisplayMode;
+  applyMode(stored);
 
-  if (hcToggle) {
-    hcToggle.addEventListener('click', () => {
-      const isEnabled = htmlEl.classList.contains(HC_KEY);
-      const next = !isEnabled;
-      applyHighContrast(next);
-      localStorage.setItem(HC_KEY, String(next));
-    });
-  }
+  btnDark?.addEventListener('click', () => applyMode('dark'));
+  btnLight?.addEventListener('click', () => applyMode('light'));
+  btnHC?.addEventListener('click', () => applyMode('high-contrast'));
 </script>
