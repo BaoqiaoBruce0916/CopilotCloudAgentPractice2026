@@ -1,1 +1,44 @@
 @import "tailwindcss";
+
+/* High contrast mode overrides applied when <html> has the `high-contrast` class */
+html.high-contrast {
+  /* Force maximum contrast backgrounds and text */
+  --hc-bg: #000000;
+  --hc-text: #ffffff;
+  --hc-border: #ffffff;
+  --hc-link: #ffff00;
+  --hc-focus: #ffff00;
+}
+
+html.high-contrast body {
+  background-color: var(--hc-bg) !important;
+  color: var(--hc-text) !important;
+}
+
+html.high-contrast header {
+  background-color: #000080 !important;
+  border-bottom: 2px solid var(--hc-border) !important;
+}
+
+html.high-contrast a {
+  color: var(--hc-link) !important;
+  text-decoration: underline !important;
+}
+
+html.high-contrast button {
+  background-color: #000080 !important;
+  color: var(--hc-text) !important;
+  border: 2px solid var(--hc-border) !important;
+}
+
+html.high-contrast [class*="bg-slate"],
+html.high-contrast [class*="bg-blue"] {
+  background-color: var(--hc-bg) !important;
+  color: var(--hc-text) !important;
+  border: 1px solid var(--hc-border) !important;
+}
+
+html.high-contrast :focus-visible {
+  outline: 3px solid var(--hc-focus) !important;
+  outline-offset: 2px !important;
+}

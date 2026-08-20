@@ -18,6 +18,17 @@ import Menu from '../assets/icons/menu.svg';
       </div>
       <div class="text-xl font-bold"><a href="/" class="hover:underline">Tailspin Toys</a></div>
     </div>
+    <div>
+      <button
+        id="high-contrast-toggle"
+        type="button"
+        class="px-3 py-1 rounded text-sm font-medium bg-white/20 hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-500 transition-colors duration-200"
+        aria-pressed="false"
+        data-testid="high-contrast-toggle"
+      >
+        High Contrast
+      </button>
+    </div>
   </div>
 </header>
 
@@ -54,6 +65,35 @@ import Menu from '../assets/icons/menu.svg';
         menuToggle.setAttribute('aria-expanded', 'false');
         menuToggle.focus();
       }
+    });
+  }
+
+  // High contrast mode: apply stored preference on load
+  const HC_KEY = 'high-contrast';
+  const htmlEl = document.documentElement;
+  const hcToggle = document.getElementById('high-contrast-toggle');
+
+  function applyHighContrast(enabled: boolean) {
+    if (enabled) {
+      htmlEl.classList.add(HC_KEY);
+    } else {
+      htmlEl.classList.remove(HC_KEY);
+    }
+    if (hcToggle) {
+      hcToggle.setAttribute('aria-pressed', String(enabled));
+    }
+  }
+
+  // Read stored preference
+  const stored = localStorage.getItem(HC_KEY);
+  applyHighContrast(stored === 'true');
+
+  if (hcToggle) {
+    hcToggle.addEventListener('click', () => {
+      const isEnabled = htmlEl.classList.contains(HC_KEY);
+      const next = !isEnabled;
+      applyHighContrast(next);
+      localStorage.setItem(HC_KEY, String(next));
     });
   }
 </script>
