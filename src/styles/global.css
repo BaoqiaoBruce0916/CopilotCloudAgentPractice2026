@@ -1,1 +1,92 @@
 @import "tailwindcss";
+
+/* ── Light mode ────────────────────────────────────────────────────────────────
+   Applied when <html> has the `light` class (i.e. the `dark` class is absent).
+   Overrides the default dark-theme Tailwind utilities.                        */
+html.light {
+  --lm-bg: #f8fafc;
+  --lm-bg-card: #ffffff;
+  --lm-text: #0f172a;
+  --lm-text-muted: #475569;
+  --lm-border: #e2e8f0;
+  --lm-header-bg: #2563eb;
+}
+
+html.light body {
+  background-color: var(--lm-bg) !important;
+  color: var(--lm-text) !important;
+}
+
+html.light header {
+  background-color: var(--lm-header-bg) !important;
+}
+
+/* Cards and containers */
+html.light [class*="bg-slate-8"],
+html.light [class*="bg-slate-9"] {
+  background-color: var(--lm-bg-card) !important;
+  color: var(--lm-text) !important;
+  border-color: var(--lm-border) !important;
+}
+
+/* Muted / secondary text */
+html.light [class*="text-slate-4"],
+html.light [class*="text-slate-5"] {
+  color: var(--lm-text-muted) !important;
+}
+
+/* Primary text that was white */
+html.light [class*="text-slate-1"],
+html.light [class*="text-slate-2"],
+html.light [class*="text-slate-3"],
+html.light [class*="text-white"] {
+  color: var(--lm-text) !important;
+}
+
+/* Hover states */
+html.light [class*="hover:bg-slate-7"]:hover {
+  background-color: #f1f5f9 !important;
+}
+
+/* ── High contrast mode ────────────────────────────────────────────────────────
+   Applied when <html> has the `high-contrast` class.                          */
+html.high-contrast {
+  --hc-bg: #000000;
+  --hc-text: #ffffff;
+  --hc-border: #ffffff;
+  --hc-link: #ffff00;
+  --hc-focus: #ffff00;
+}
+
+html.high-contrast body {
+  background-color: var(--hc-bg) !important;
+  color: var(--hc-text) !important;
+}
+
+html.high-contrast header {
+  background-color: #000080 !important;
+  border-bottom: 2px solid var(--hc-border) !important;
+}
+
+html.high-contrast a {
+  color: var(--hc-link) !important;
+  text-decoration: underline !important;
+}
+
+html.high-contrast button {
+  background-color: #000080 !important;
+  color: var(--hc-text) !important;
+  border: 2px solid var(--hc-border) !important;
+}
+
+html.high-contrast [class*="bg-slate"],
+html.high-contrast [class*="bg-blue"] {
+  background-color: var(--hc-bg) !important;
+  color: var(--hc-text) !important;
+  border: 1px solid var(--hc-border) !important;
+}
+
+html.high-contrast :focus-visible {
+  outline: 3px solid var(--hc-focus) !important;
+  outline-offset: 2px !important;
+}
